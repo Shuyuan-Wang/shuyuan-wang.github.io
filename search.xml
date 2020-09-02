@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Leetcode SQL Questions</title>
+    <url>/2020/09/02/Leetcode-SQL-Questions/</url>
+    <content><![CDATA[<p>This is a post recording the SQL questions that I have made mistakes or encountered pitfalls.<br>Actively updating.</p>
+<a id="more"></a>
+<h2 id="Running-Total"><a href="#Running-Total" class="headerlink" title="Running Total"></a>Running Total</h2><h3 id="1-534-Game-Play-Analysis-III"><a href="#1-534-Game-Play-Analysis-III" class="headerlink" title="1. (534. Game Play Analysis III)"></a>1. (534. Game Play Analysis III)</h3><p>Write an SQL query that reports for each player and date, how many games played so far by the player. That is, the total number of games played by the player until that date. </p>
+<p>The query result format is in the following example:</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">Activity table:</span><br><span class="line">+-----------+-----------+------------+--------------+</span><br><span class="line">| player_id | device_id | event_date | games_played |</span><br><span class="line">+-----------+-----------+------------+--------------+</span><br><span class="line">| <span class="number">1</span>         | <span class="number">2</span>         | <span class="number">2016</span><span class="number">-03</span><span class="number">-01</span> | <span class="number">5</span>            |</span><br><span class="line">| <span class="number">1</span>         | <span class="number">2</span>         | <span class="number">2016</span><span class="number">-05</span><span class="number">-02</span> | <span class="number">6</span>            |</span><br><span class="line">| <span class="number">1</span>         | <span class="number">3</span>         | <span class="number">2017</span><span class="number">-06</span><span class="number">-25</span> | <span class="number">1</span>            |</span><br><span class="line">| <span class="number">3</span>         | <span class="number">1</span>         | <span class="number">2016</span><span class="number">-03</span><span class="number">-02</span> | <span class="number">0</span>            |</span><br><span class="line">| <span class="number">3</span>         | <span class="number">4</span>         | <span class="number">2018</span><span class="number">-07</span><span class="number">-03</span> | <span class="number">5</span>            |</span><br><span class="line">+-----------+-----------+------------+--------------+</span><br><span class="line">Result table:</span><br><span class="line">+-----------+------------+---------------------+</span><br><span class="line">| <span class="number">1</span>         | <span class="number">2016</span><span class="number">-03</span><span class="number">-01</span> | <span class="number">5</span>                   |</span><br><span class="line">| <span class="number">1</span>         | <span class="number">2016</span><span class="number">-05</span><span class="number">-02</span> | <span class="number">11</span>                  |</span><br><span class="line">| <span class="number">1</span>         | <span class="number">2017</span><span class="number">-06</span><span class="number">-25</span> | <span class="number">12</span>                  |</span><br><span class="line">| <span class="number">3</span>         | <span class="number">2016</span><span class="number">-03</span><span class="number">-02</span> | <span class="number">0</span>                   |</span><br><span class="line">| <span class="number">3</span>         | <span class="number">2018</span><span class="number">-07</span><span class="number">-03</span> | <span class="number">5</span>                   |</span><br><span class="line">+-----------+------------+---------------------+</span><br><span class="line"></span><br><span class="line">For the player with id <span class="number">1</span>, <span class="number">5</span> + <span class="number">6</span> = <span class="number">11</span> games played by <span class="number">2016</span><span class="number">-05</span><span class="number">-02</span>, <span class="keyword">and</span> <span class="number">5</span> + <span class="number">6</span> + <span class="number">1</span> = <span class="number">12</span> games played by <span class="number">2017</span><span class="number">-06</span><span class="number">-25.</span></span><br><span class="line">For the player with id <span class="number">3</span>, <span class="number">0</span> + <span class="number">5</span> = <span class="number">5</span> games played by <span class="number">2018</span><span class="number">-07</span><span class="number">-03.</span></span><br><span class="line">Note that <span class="keyword">for</span> each player we only care about the days when the player logged <span class="keyword">in</span>.</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Solution 1 (self join)</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">    a.player_id, </span><br><span class="line">    a.event_date, </span><br><span class="line">    <span class="keyword">SUM</span>(b.games_played) <span class="keyword">AS</span> games_played_so_far</span><br><span class="line"><span class="keyword">FROM</span> </span><br><span class="line">    Activity a, Activity b</span><br><span class="line"><span class="keyword">WHERE</span> a.event_date &gt;= b.event_date <span class="keyword">AND</span> a.player_id = b.player_id</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> a.player_id, a.event_date</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Solution 2 (window function)</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> player_id, event_date, </span><br><span class="line">			<span class="keyword">sum</span>(games_played) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> player_id </span><br><span class="line">            <span class="keyword">order</span> <span class="keyword">by</span> player_id, event_date) <span class="keyword">as</span> games_played_so_far</span><br><span class="line"><span class="keyword">from</span> activity</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> player_id, event_date</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>SQL</category>
+      </categories>
+      <tags>
+        <tag>SQL, Leetcode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2020/09/02/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+</search>
