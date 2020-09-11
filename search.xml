@@ -42,4 +42,20 @@
         <tag>SQL, Leetcode</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Realtime Twitter Mentioned Users Analysis using Spark Streaming during USOpen 2020</title>
+    <url>/2020/09/11/twitter_usopen/</url>
+    <content><![CDATA[<h2 id="3-Analyze-data"><a href="#3-Analyze-data" class="headerlink" title="3. Analyze data"></a>3. Analyze data</h2><p>USOpen is one of the major tennis championships in the year. Due to the COVID-19 pandemic, USOpen 2020 is held in Flushing, New York with no audience at present. People watch the matches through online platform. One of the ways to capture the trending of the game is via Twitter. Therefore, I set up the realtime data gathering and transformation pipeline to see the up-trending players as the game proceeds.</p>
+<h3 id="2020-09-10-17-00-after-Men’s-Doubles-Final"><a href="#2020-09-10-17-00-after-Men’s-Doubles-Final" class="headerlink" title="2020-09-10 17:00, after Men’s Doubles Final"></a>2020-09-10 17:00, after Men’s Doubles Final</h3><p>Mate Pavia &amp; Bruno Soares defeat Koolhof &amp; Mektic in the game. It is their first Grand Slam title together. As is shown in the barplot, <strong>@brunosoares82</strong>, the Twitter account for Bruno Soares is quite popular at the time when the code was run. Mate Pavia doesn’t have Twitter account, so he is not shown in the top mentioned Twitter user. </p>
+<p>As Women’s Singles Semifinals are to be on at the same day at 19:00, the candidates Naomi Osaka (No.4 seed, <strong>@naomiosaka</strong>) and Serena Williams (No.3 seed, <strong>@serenawilliams</strong>) are also popular.</p>
+<p><img src="/images/0910-17.gif"></p>
+<h3 id="2020-09-10-21-30-after-Women’s-Single-Semifinal-1"><a href="#2020-09-10-21-30-after-Women’s-Single-Semifinal-1" class="headerlink" title="2020-09-10 21:30, after Women’s Single Semifinal -1"></a>2020-09-10 21:30, after Women’s Single Semifinal -1</h3><p>Naomi Osaka beats Jennifer Brady. This is an exciting and fantastic match, with a tied at the first set. This is Osaka’s 3rd career Grand Slam final. People are thrilled at the result and looking forward to seeing her in the final. The strong support for Osaka could be seen from the number of times her Twitter account is mentioned after the semifinal.</p>
+<p><img src="/images/0910-21.gif"></p>
+<h3 id="2020-09-11-00-00-after-Women’s-Single-Semifinal-2"><a href="#2020-09-11-00-00-after-Women’s-Single-Semifinal-2" class="headerlink" title="2020-09-11 00:00, after Women’s Single Semifinal -2"></a>2020-09-11 00:00, after Women’s Single Semifinal -2</h3><p>This is Victoria Azarenka’s (<strong>@vika7</strong>) first major final in seven years! She beats Serena Williams with 1-6, 6-3, 6-3. I watch this match in live stream, and Azarenka is so impressive! Although people hate to see Serena lose the match, they are glad to see Azarenka doing well again and going to the final of the USOpen from unseeded. Azarenka will battle Osaka in the Women’s Single Final, and the match would be so much fun because the two player are former finalist and former champion, respectively. Therefore, <strong>@vika7</strong>, <strong>@serenawilliams</strong>, <strong>@naomiosaka</strong> are top-trending after this semifinal. By the way, <strong>@espn</strong> is also mentioned so many times because it is the media that provides live stream service and people re-tweet its tweet after it announces the victory of Azarenka. </p>
+<p><img src="/images/0911-00.gif"></p>
+]]></content>
+      <tags>
+        <tag>Twitter, Apache Spark, USOpen</tag>
+      </tags>
+  </entry>
 </search>

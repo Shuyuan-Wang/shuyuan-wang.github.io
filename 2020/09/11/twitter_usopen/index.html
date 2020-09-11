@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Hind:300,300italic,400,400italic,700,700italic|Shadows+Into+Light:300,300italic,400,400italic,700,700italic|Roboto+Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"shuyuan-wang.github.io","root":"/","scheme":"Mist","version":"8.0.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":12,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="3. Analyze dataUSOpen is one of the major tennis championships in the year. Due to the COVID-19 pandemic, USOpen 2020 is held in Flushing, New York with no audience at present. People watch the matche">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Realtime Twitter Mentioned Users Analysis using Spark Streaming during USOpen 2020">
+<meta property="og:url" content="https://shuyuan-wang.github.io/2020/09/11/twitter_usopen/index.html">
+<meta property="og:site_name" content="Shirley&#39;s Notes">
+<meta property="og:description" content="3. Analyze dataUSOpen is one of the major tennis championships in the year. Due to the COVID-19 pandemic, USOpen 2020 is held in Flushing, New York with no audience at present. People watch the matche">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://shuyuan-wang.github.io/images/0910-17.gif">
+<meta property="og:image" content="https://shuyuan-wang.github.io/images/0910-21.gif">
+<meta property="og:image" content="https://shuyuan-wang.github.io/images/0911-00.gif">
+<meta property="article:published_time" content="2020-09-11T05:17:50.000Z">
+<meta property="article:modified_time" content="2020-09-11T05:29:11.767Z">
+<meta property="article:author" content="Shirley">
+<meta property="article:tag" content="Twitter, Apache Spark, USOpen">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://shuyuan-wang.github.io/images/0910-17.gif">
+
+
+<link rel="canonical" href="https://shuyuan-wang.github.io/2020/09/11/twitter_usopen/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Realtime Twitter Mentioned Users Analysis using Spark Streaming during USOpen 2020 | Shirley's Notes</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Shirley's Notes</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Analyze-data"><span class="nav-number">1.</span> <span class="nav-text">3. Analyze data</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2020-09-10-17-00-after-Men%E2%80%99s-Doubles-Final"><span class="nav-number">1.1.</span> <span class="nav-text">2020-09-10 17:00, after Men’s Doubles Final</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2020-09-10-21-30-after-Women%E2%80%99s-Single-Semifinal-1"><span class="nav-number">1.2.</span> <span class="nav-text">2020-09-10 21:30, after Women’s Single Semifinal -1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2020-09-11-00-00-after-Women%E2%80%99s-Single-Semifinal-2"><span class="nav-number">1.3.</span> <span class="nav-text">2020-09-11 00:00, after Women’s Single Semifinal -2</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Shirley</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://shuyuan-wang.github.io/2020/09/11/twitter_usopen/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Shirley">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shirley's Notes">
+    </span>
+
+    
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Realtime Twitter Mentioned Users Analysis using Spark Streaming during USOpen 2020
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2020-09-11 01:17:50 / Modified: 01:29:11" itemprop="dateCreated datePublished" datetime="2020-09-11T01:17:50-04:00">2020-09-11</time>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="Symbols count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Symbols count in article: </span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>2 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="3-Analyze-data"><a href="#3-Analyze-data" class="headerlink" title="3. Analyze data"></a>3. Analyze data</h2><p>USOpen is one of the major tennis championships in the year. Due to the COVID-19 pandemic, USOpen 2020 is held in Flushing, New York with no audience at present. People watch the matches through online platform. One of the ways to capture the trending of the game is via Twitter. Therefore, I set up the realtime data gathering and transformation pipeline to see the up-trending players as the game proceeds.</p>
+<h3 id="2020-09-10-17-00-after-Men’s-Doubles-Final"><a href="#2020-09-10-17-00-after-Men’s-Doubles-Final" class="headerlink" title="2020-09-10 17:00, after Men’s Doubles Final"></a>2020-09-10 17:00, after Men’s Doubles Final</h3><p>Mate Pavia &amp; Bruno Soares defeat Koolhof &amp; Mektic in the game. It is their first Grand Slam title together. As is shown in the barplot, <strong>@brunosoares82</strong>, the Twitter account for Bruno Soares is quite popular at the time when the code was run. Mate Pavia doesn’t have Twitter account, so he is not shown in the top mentioned Twitter user. </p>
+<p>As Women’s Singles Semifinals are to be on at the same day at 19:00, the candidates Naomi Osaka (No.4 seed, <strong>@naomiosaka</strong>) and Serena Williams (No.3 seed, <strong>@serenawilliams</strong>) are also popular.</p>
+<p><img src="/images/0910-17.gif"></p>
+<h3 id="2020-09-10-21-30-after-Women’s-Single-Semifinal-1"><a href="#2020-09-10-21-30-after-Women’s-Single-Semifinal-1" class="headerlink" title="2020-09-10 21:30, after Women’s Single Semifinal -1"></a>2020-09-10 21:30, after Women’s Single Semifinal -1</h3><p>Naomi Osaka beats Jennifer Brady. This is an exciting and fantastic match, with a tied at the first set. This is Osaka’s 3rd career Grand Slam final. People are thrilled at the result and looking forward to seeing her in the final. The strong support for Osaka could be seen from the number of times her Twitter account is mentioned after the semifinal.</p>
+<p><img src="/images/0910-21.gif"></p>
+<h3 id="2020-09-11-00-00-after-Women’s-Single-Semifinal-2"><a href="#2020-09-11-00-00-after-Women’s-Single-Semifinal-2" class="headerlink" title="2020-09-11 00:00, after Women’s Single Semifinal -2"></a>2020-09-11 00:00, after Women’s Single Semifinal -2</h3><p>This is Victoria Azarenka’s (<strong>@vika7</strong>) first major final in seven years! She beats Serena Williams with 1-6, 6-3, 6-3. I watch this match in live stream, and Azarenka is so impressive! Although people hate to see Serena lose the match, they are glad to see Azarenka doing well again and going to the final of the USOpen from unseeded. Azarenka will battle Osaka in the Women’s Single Final, and the match would be so much fun because the two player are former finalist and former champion, respectively. Therefore, <strong>@vika7</strong>, <strong>@serenawilliams</strong>, <strong>@naomiosaka</strong> are top-trending after this semifinal. By the way, <strong>@espn</strong> is also mentioned so many times because it is the media that provides live stream service and people re-tweet its tweet after it announces the victory of Azarenka. </p>
+<p><img src="/images/0911-00.gif"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Twitter-Apache-Spark-USOpen/" rel="tag"># Twitter, Apache Spark, USOpen</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/09/02/Leetcode-SQL-Questions/" rel="prev" title="Leetcode SQL Questions">
+                  <i class="fa fa-chevron-left"></i> Leetcode SQL Questions
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shirley</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Symbols count total">4k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">3 mins.</span>
+  </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.0/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+    </div>
+</body>
+</html>
