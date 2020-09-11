@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://shuyuan-wang.github.io/images/0911-00.gif">
 <meta property="og:image" content="https://shuyuan-wang.github.io/images/0911-15.gif">
 <meta property="article:published_time" content="2020-09-11T05:17:50.000Z">
-<meta property="article:modified_time" content="2020-09-11T19:41:14.273Z">
+<meta property="article:modified_time" content="2020-09-11T19:44:18.446Z">
 <meta property="article:author" content="Shirley">
 <meta property="article:tag" content="Twitter, Apache Spark, USOpen">
 <meta name="twitter:card" content="summary">
@@ -295,7 +295,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2020-09-11 01:17:50 / Modified: 15:41:14" itemprop="dateCreated datePublished" datetime="2020-09-11T01:17:50-04:00">2020-09-11</time>
+      <time title="Created: 2020-09-11 01:17:50 / Modified: 15:44:18" itemprop="dateCreated datePublished" datetime="2020-09-11T01:17:50-04:00">2020-09-11</time>
     </span>
 
   
@@ -325,6 +325,8 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>In this project, I obtained realtime tweets using <a target="_blank" rel="noopener" href="https://github.com/bear/python-twitter">python-twitter</a> wrapper, and then processed the tweets using Apache Spark Streaming to identify mentioned users with search keyword <em>USOpen</em>, and finally returned top 20 popular mentioned users and visualized them with bar plots.</p>
+<a id="more"></a>
+
 <h2 id="1-Obtain-realtime-tweets-from-Twitter"><a href="#1-Obtain-realtime-tweets-from-Twitter" class="headerlink" title="1. Obtain realtime tweets from Twitter"></a>1. Obtain realtime tweets from Twitter</h2><h3 id="Step-1-1-Apply-for-Twitter-developer-account"><a href="#Step-1-1-Apply-for-Twitter-developer-account" class="headerlink" title="Step 1.1 Apply for Twitter developer account"></a>Step 1.1 Apply for Twitter developer account</h3><p>Upgrade Twitter account to developer account on <a target="_blank" rel="noopener" href="https://apps.twitter.com/">apps.twitter</a> and create an app to get the consumer keys and authentication tokens.</p>
 <h3 id="Step-1-2-Install-the-python-twitter-wrapper"><a href="#Step-1-2-Install-the-python-twitter-wrapper" class="headerlink" title="Step 1.2 Install the python-twitter wrapper"></a>Step 1.2 Install the python-twitter wrapper</h3><p>With the keys and tokens of newly created Twitter App and the help of <a target="_blank" rel="noopener" href="https://github.com/bear/python-twitter">python-twitter</a> wrapper, I easily extracted the tweet text from Twitter and sent the information to Spark via TCP connection using Python Socket package. (For <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/socket.html">official document</a> of Socket, for <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/39982451">brief introduction</a>.)</p>
 <h2 id="2-Establish-Apache-Spark-Streaming-Application"><a href="#2-Establish-Apache-Spark-Streaming-Application" class="headerlink" title="2. Establish Apache Spark Streaming Application"></a>2. Establish Apache Spark Streaming Application</h2><p>As a powerful big data tool, Spark is able to process the realtime stream data and transform it to get the information we need. More specifically, I used Spark to receive the tweets and extract the user (the word begin with <strong>@</strong>, excluding the keyword itself), and calculate the number of times a user was mentioned. </p>
