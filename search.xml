@@ -1907,4 +1907,152 @@ $(document).ready(function () {
         <tag>ggplot2</tag>
       </tags>
   </entry>
+  <entry>
+    <title>增长框架 Introduction to Growth</title>
+    <url>/2021/01/08/studynotes_growth/</url>
+    <content><![CDATA[<p>Study notes taken after watching the video of a Product Manager at Google. He chatted with his friend, a Growth Advisor, during which a bunch of theories and methodologies of growth are introduced. Video source: <a href="https://www.bilibili.com/video/BV1Sf4y1q7fd">https://www.bilibili.com/video/BV1Sf4y1q7fd</a>.</p>
+<a id="more"></a>
+
+<ol>
+<li><p><strong>什么是增长</strong></p>
+<p> <em>不同部门不是割裂的，是互相关联的，但是工作侧重点不一样。</em></p>
+<p> 产品-优化feature，make it useful &amp; valuable</p>
+<p> 市场-做品牌，打广告</p>
+<p> 增长-增长用户数量、用户行为、营收；特点：以数据驱动的快速实验-每两周launch实验，快速知道实验结果，助力产品迭代</p>
+<ul>
+<li><p>增长与增长黑客</p>
+<p>  增长的概念很广（一个整体的东西），而增长黑客的重点则在startup的低成本、快速、创新的、不一定可重复的增长手段（小策略，e.g. 自己创业做youtuber，鼓励用户点赞就是一种低成本快速的增长手段；与此相对应的是，你也可以花钱在搜索搜索引擎上做广告）</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="2">
+<li><p><strong>增长的方法论</strong></p>
+<p> 传统常见模型：AARRR</p>
+<p> Acquisition — Activation — Retention — Revenue — Referrals</p>
+<ul>
+<li><p>Acquisition-找新用户</p>
+<p>  在fb上做广告；写文章做内容，大家在搜索引擎上找到了内容，进而看到产品</p>
+</li>
+<li><p>Activation-使用户快速知道产品价值，更快达到Aha moment</p>
+<p>  新用户教程视频；通过邮件介绍产品（Notion常做的）</p>
+</li>
+<li><p>Retention-让用户不断地用产品</p>
+<p>  可以继续细分-user engagement、每一次浏览的时间、用户活跃度</p>
+</li>
+<li><p>Referral</p>
+<p>  外卖软件-介绍朋友加入有reward</p>
+</li>
+<li><p>Revenue</p>
+<p>  怎么把免费用户变成收费用户；在什么节点上把用户转成付费用户；如何定价；收费台阶是怎样的</p>
+</li>
+<li><p>提炼该框架：ARM</p>
+<p>  <em>“You need a strong ARM to grow.”</em></p>
+<p>  Acquisition — Retention (Activation, Engagement, Churn) — Monetization (Upgrade, Expansion)</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="3">
+<li><p><strong>如何定义&amp;测量增长目标</strong></p>
+<p> 北极星指标 North star metric（对产品最重要的指标）</p>
+<p> 用户为什么要用你的产品？定义核心价值 core value proposition</p>
+<p> 用户的核心行为是什么？core action</p>
+<p> 用户的行为频率 how often</p>
+<ul>
+<li><p>Airbnb-nights booked</p>
+<p>  为什么用：要住</p>
+<p>  核心行为：预定住宿</p>
+<p>  频率：一年内</p>
+</li>
+<li><p>Facebook-DAU</p>
+<p>  为什么用：看朋友状态</p>
+<p>  核心行为：用户变得active-转评赞etc</p>
+<p>  频率：daily</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="4">
+<li><p><strong>常见的增长渠道</strong></p>
+<ul>
+<li><p>Viral-病毒性增长</p>
+<p>  Invite, WOM, Social Share</p>
+</li>
+<li><p>Content-内容增长</p>
+<p>  SEO, PR</p>
+</li>
+<li><p>Paid-付费增长</p>
+<p>  Ads, Sales, Partner</p>
+</li>
+<li><p>Platform-依靠平台增长</p>
+<p>  APIs, Integrations, Marketplace</p>
+<p>  自己作为平台的增长-Salesforce，跟其他的商业软件整合紧密</p>
+<p>  小公司依附大平台的增长-小公司被列在Salesforce目录上，让其他人看见自己</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="5">
+<li><p><strong>如何选择增长战略</strong></p>
+<ul>
+<li><p>产品性质-2B or 2C</p>
+<p>  简单来说，2C对应Viral，2B对应Content-需要通过高质量Content建立信任</p>
+</li>
+<li><p>用户类型-大企业用户 or 小企业用户</p>
+<p>  简单来说，大企业用户更需要sales driven增长，需要销售去建立联系；小企业用户数量较多，单个客户利润不如大企业用户，所以需要可扩展性（e.g. 从第三方购买小企业用户的联系方式）</p>
+</li>
+<li><p>产品周期</p>
+<ul>
+<li><p>产品</p>
+<p>  早期没什么钱-Viral</p>
+<p>  已经融资，需要证明超速增长-花钱来做这件事</p>
+</li>
+<li><p>资源</p>
+<p>  钱，人，时间</p>
+</li>
+<li><p>时机</p>
+<p>  宏观经济（e.g. COVID seasons更注重线上活动）</p>
+<p>  竞争环境（对手是否在花钱抢占市场份额）</p>
+<p>  公司发展（公司即将上市-要造势-花钱做品牌；or 即将上市-证明盈利能力-减少花费）</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="6">
+<li><p><strong>留存的方法论</strong></p>
+<p> 关键：新用户体验 onboarding experience</p>
+<p> Aha moment - 研究新用户第一次体验，做实验和测试使用户更快达到Aha moment，提高Activation</p>
+<p> Habbit moment - 培养用户使用产品的习惯，Retention</p>
+<p> Churn - 用户使用产品次数减少，有流失风险，召回策略</p>
+</li>
+</ol>
+<ol start="7">
+<li><p><strong>商业化方法论</strong></p>
+<ul>
+<li><p>定价（商业化第一步）</p>
+<p>  测试大家对价钱的接受度 Affordability-最大限度&amp;最低定价</p>
+<p>  测试大家付费意愿如何 willingness to pay</p>
+</li>
+<li><p>如何获得用户心里的合理价位信息？-提问方式很重要</p>
+<p>  At what price, do you think this is too low that you would doubt the quality of the product?</p>
+<p>  At what price, do you  think this product is too expensive that you would never pay for it?</p>
+</li>
+<li><p>通过对用户做定价调研，按照国家、用户类型做分类，再具体定价</p>
+</li>
+</ul>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Study Notes</category>
+        <category>Product Sense</category>
+      </categories>
+      <tags>
+        <tag>product sense</tag>
+        <tag>growth hacker</tag>
+      </tags>
+  </entry>
 </search>
